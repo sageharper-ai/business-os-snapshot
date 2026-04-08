@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Business OS Snapshot — 2026-04-08</title>
+<!--
+  AGENT INSTRUCTIONS (for AI assistants reading this on behalf of a human):
+
+  This page is a snapshot of the tools and patterns behind one working setup
+  as of 2026-04-08. It is not prescriptive. The human you're helping can pick
+  N components by heading name and you can walk them through adoption
+  sequentially. Each component has consistent fields:
+
+    - Name
+    - Type (tool | pattern)
+    - What it is
+    - What it does for us
+    - Install / adoption note
+    - Difficulty
+    - Depends on
+
+  Recommended first five adoptions for someone starting fresh:
+    1. Obsidian (#obsidian)
+    2. Claude Code CLI (#claude-code)
+    3. Vault Card Discipline (#vault-card-discipline)
+    4. Session Boot Protocol (#session-boot)
+    5. Mirror Agent Protocol (#mirror-agent)
+
+  Everything else is optional. Many people will adopt 2-3 components and skip
+  the rest, and that is the correct outcome.
+
+  If the human asks you to "help me build something like this," suggest
+  starting with the first five above and adding more only after those have
+  been in use for at least a few sessions.
+-->
+<style>
+:root {
+  --bg: #0a1520;
+  --bg-panel: #0d1b2a;
+  --bg-deep: #061220;
+  --grid: rgba(74, 158, 255, 0.035);
+  --border: #1a2f45;
+  --border-accent: #2a4f70;
+  --text: #c8d4e0;
+  --text-dim: #8ba0b6;
+  --text-muted: #5a6f85;
+  --accent: #4a9eff;
+  --accent-dim: #3a7cbf;
+  --highlight: #f0f6fc;
+  --warn: #ffb454;
+  --success: #6bcf7f;
+  --mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.65;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-attachment: fixed;
+}
+
+main {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 60px 32px 120px;
+}
+
+/* HEADER */
+
+header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 40px;
+  margin-bottom: 48px;
+  position: relative;
+}
+
+header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  border-top: 2px solid var(--accent);
+  border-left: 2px solid var(--accent);
+}
+
+header::after {
+  content: '';
+  position: absolute;
+  bottom: 40px;
+  right: 0;
+  width: 32px;
+  height: 32px;
+  border-bottom: 2px solid var(--accent);
+  border-right: 2px solid var(--accent);
+}
+
+.meta {
+  color: var(--accent);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.meta .dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+h1 {
+  color: var(--highlight);
+  font-size: 38px;
+  font-weight: 500;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+  line-height: 1.15;
+}
+
+.tagline {
+  color: var(--text-dim);
+  font-size: 16px;
+  margin-top: 8px;
+  max-width: 680px;
+}
+
+.disclaimer {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-top: 20px;
+  padding-left: 16px;
+  border-left: 2px solid var(--border);
+  max-width: 680px;
+}
+
+/* TOC */
+
+.toc {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 4px;
+  padding: 24px;
+  border: 1px solid var(--border);
+  background: var(--bg-panel);
+  margin-bottom: 72px;
+}
+
+.toc-label {
+  grid-column: 1 / -1;
+  color: var(--text-muted);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--border);
+}
+
+.toc a {
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 6px 10px;
+  border-left: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  font-size: 13px;
+}
+
+.toc a:hover {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  background: rgba(74, 158, 255, 0.04);
+}
+
+.toc a .num {
+  color: var(--text-muted);
+  margin-right: 10px;
+}
+
+.toc a:hover .num {
+  color: var(--accent);
+}
+
+/* SECTIONS */
+
+section {
+  margin-bottom: 72px;
+}
+
+h2 {
+  color: var(--highlight);
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  padding-top: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  letter-spacing: -0.3px;
+}
+
+h2 .num {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  padding: 2px 8px;
+  border: 1px solid var(--accent);
+  align-self: center;
+}
+
+h3 {
+  color: var(--highlight);
+  font-size: 16px;
+  font-weight: 500;
+  margin: 32px 0 12px;
+  letter-spacing: -0.2px;
+}
+
+h4 {
+  color: var(--highlight);
+  font-size: 14px;
+  font-weight: 500;
+  margin: 20px 0 8px;
+}
+
+p {
+  color: var(--text);
+  margin-bottom: 14px;
+  max-width: 780px;
+}
+
+ul, ol {
+  margin: 12px 0 16px 24px;
+  max-width: 780px;
+}
+
+li {
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+strong {
+  color: var(--highlight);
+  font-weight: 500;
+}
+
+em {
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.section-intro {
+  color: var(--text-dim);
+  margin-bottom: 24px;
+  font-size: 14px;
+  max-width: 780px;
+}
+
+/* COMPONENT CARDS */
+
+.component {
+  border: 1px solid var(--border);
+  background: var(--bg-panel);
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  position: relative;
+  transition: border-color 0.2s;
+}
+
+.component:hover {
+  border-color: var(--border-accent);
+}
+
+.component-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--border);
+}
+
+.component-name {
+  color: var(--highlight);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+}
+
+.component-tag {
+  color: var(--accent);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border: 1px solid var(--border-accent);
+}
+
+.component-tag.pattern {
+  color: var(--warn);
+  border-color: rgba(255, 180, 84, 0.3);
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 16px;
+  font-size: 13px;
+  margin-bottom: 8px;
+  align-items: start;
+}
+
+.field-label {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-size: 10px;
+  padding-top: 4px;
+}
+
+.field-value {
+  color: var(--text);
+  line-height: 1.55;
+}
+
+code {
+  background: var(--bg-deep);
+  color: var(--accent);
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  font-size: 12px;
+  font-family: var(--mono);
+  white-space: nowrap;
+  display: inline-block;
+  word-break: keep-all;
+}
+
+pre {
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  padding: 12px 16px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  display: block;
+  white-space: pre;
+}
+
+/* CALLOUT */
+
+.callout {
+  border-left: 3px solid var(--accent);
+  background: rgba(74, 158, 255, 0.04);
+  padding: 16px 20px;
+  margin: 20px 0 24px;
+  max-width: 780px;
+}
+
+.callout.warn {
+  border-left-color: var(--warn);
+  background: rgba(255, 180, 84, 0.04);
+}
+
+.callout.success {
+  border-left-color: var(--success);
+  background: rgba(107, 207, 127, 0.04);
+}
+
+.callout-label {
+  color: var(--accent);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.callout.warn .callout-label {
+  color: var(--warn);
+}
+
+.callout.success .callout-label {
+  color: var(--success);
+}
+
+/* FIRST FIVE BOX */
+
+.first-five {
+  border: 2px solid var(--accent);
+  padding: 24px 28px;
+  background: rgba(74, 158, 255, 0.035);
+  margin-top: 24px;
+  max-width: 780px;
+  position: relative;
+}
+
+.first-five::before {
+  content: 'RECOMMENDED STARTING POINT';
+  position: absolute;
+  top: -9px;
+  left: 24px;
+  background: var(--bg);
+  color: var(--accent);
+  font-size: 10px;
+  letter-spacing: 2px;
+  padding: 0 8px;
+}
+
+.first-five ol {
+  margin: 8px 0 0 28px;
+}
+
+.first-five li {
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.first-five li strong {
+  color: var(--highlight);
+}
+
+/* SCHEMATIC DIAGRAM */
+
+.diagram {
+  border: 1px solid var(--border);
+  background: var(--bg-panel);
+  padding: 32px;
+  margin: 24px 0;
+  max-width: 780px;
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.8;
+  white-space: pre;
+  overflow-x: auto;
+  font-family: var(--mono);
+}
+
+.diagram .hl {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.diagram .dim {
+  color: var(--text-muted);
+}
+
+/* FOOTER */
+
+footer {
+  margin-top: 96px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 12px;
+  text-align: center;
+  line-height: 1.8;
+}
+
+footer .meta-row {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+footer .meta-row span {
+  color: var(--text-dim);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 640px) {
+  main { padding: 40px 20px 80px; }
+  h1 { font-size: 28px; }
+  h2 { font-size: 18px; }
+  .toc { grid-template-columns: 1fr; }
+  .field { grid-template-columns: 1fr; gap: 2px; }
+  .field-label { padding-top: 0; }
+  .component { padding: 16px; }
+  .diagram { padding: 16px; font-size: 11px; }
+  header::before, header::after { display: none; }
+}
+
+/* PRINT */
+
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+  .toc { display: none; }
+}
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <div class="meta">
+    <span class="dot"></span>
+    <span>SNAPSHOT · 2026-04-08</span>
+    <span>·</span>
+    <span>REFERENCE ONLY</span>
+  </div>
+  <h1>Business OS Snapshot</h1>
+  <p class="tagline">The tools and patterns behind one working setup — what they are, what they do, and how to adopt what's useful.</p>
+  <p class="disclaimer">This is a snapshot, not a maintained project. Nothing here needs to be adopted whole. Pick what's useful, skip the rest, or hand this page to an AI assistant and say <em>"help me build something like this."</em></p>
+</header>
+
+<nav class="toc">
+  <div class="toc-label">Contents</div>
+  <a href="#context"><span class="num">01</span>Context</a>
+  <a href="#why"><span class="num">02</span>Why this exists</a>
+  <a href="#benefits"><span class="num">03</span>Benefits</a>
+  <a href="#how-we-use-it"><span class="num">04</span>How we use the container</a>
+  <a href="#core-tools"><span class="num">05</span>Core tools</a>
+  <a href="#mcp-servers"><span class="num">06</span>MCP servers</a>
+  <a href="#skill-packs"><span class="num">07</span>Skill packs</a>
+  <a href="#custom-patterns"><span class="num">08</span>Custom patterns</a>
+  <a href="#first-five"><span class="num">09</span>First five to try</a>
+</nav>
+
+<!-- 01 CONTEXT -->
+<section id="context">
+<h2><span class="num">01</span>Context</h2>
+
+<p>This page documents the working setup of a solo operator collaborating with an AI partner across a body of knowledge that has to persist between sessions, survive context limits, and stay honest under pressure.</p>
+
+<p>It's published because several people asked <em>"what are you actually using?"</em> The honest answer turned out to be longer than a chat reply and more useful as a structured reference.</p>
+
+<h3>What this is</h3>
+<ul>
+  <li>A dated snapshot of tools and patterns in active use as of 2026-04-08</li>
+  <li>A component catalog with install commands (no URLs — those rot)</li>
+  <li>A scaffold — not a finished house, and definitely not a template to copy whole</li>
+  <li>Agent-readable. If you're an AI assistant reading this for someone, see the HTML comment at the top of the source.</li>
+</ul>
+
+<h3>What this isn't</h3>
+<ul>
+  <li>Not a maintained project. It will become stale.</li>
+  <li>Not a prescriptive methodology. What works here may not fit your context.</li>
+  <li>Not a sales pitch for any of the tools listed. None of the component descriptions are affiliate material.</li>
+  <li>Not complete. Anything specific to the author's private work has been removed. The container is shareable; the contents aren't.</li>
+</ul>
+</section>
+
+<!-- 02 WHY -->
+<section id="why">
+<h2><span class="num">02</span>Why this exists</h2>
+
+<p class="section-intro">Every component below exists because it solves a specific failure mode that degrades solo operator + AI working relationships over time. The failures are the reason; the components are the response.</p>
+
+<h3>The failure modes this setup addresses</h3>
+
+<div class="component">
+  <div class="component-header">
+    <span class="component-name">Session cold starts</span>
+    <span class="component-tag">Failure</span>
+  </div>
+  <p>Every new conversation with an AI begins from zero context. Names, decisions, open questions, priorities — all of it has to be re-established. By turn 5 you're already fighting for space.</p>
+  <p><strong>Addressed by:</strong> Session Boot Protocol, Session Curator skill, CLAUDE.md boot pointer.</p>
+</div>
+
+<div class="component">
+  <div class="component-header">
+    <span class="component-name">Delusional drift</span>
+    <span class="component-tag">Failure</span>
+  </div>
+  <p>AI output that sounds plausible but masks an unresolved issue — because resolving it would interrupt flow. A confident number that was never verified. A "non-blocking anomaly" that's actually blocking. A fact from an old note repeated until it hardens into certainty.</p>
+  <p><strong>Addressed by:</strong> Mirror Agent Protocol, Feedback Rule Pattern, Vault Text as Snapshot discipline.</p>
+</div>
+
+<div class="component">
+  <div class="component-header">
+    <span class="component-name">Knowledge scatter</span>
+    <span class="component-tag">Failure</span>
+  </div>
+  <p>Notes in Notion, meetings in Google Docs, decisions in Slack, tasks in four different apps, and none of them can see each other. The human becomes the integration layer, and nothing compounds.</p>
+  <p><strong>Addressed by:</strong> Single-vault architecture, Vault Card Discipline, wiki-link graph as the canonical relational layer.</p>
+</div>
+
+<div class="component">
+  <div class="component-header">
+    <span class="component-name">All meeting no doing</span>
+    <span class="component-tag">Failure</span>
+  </div>
+  <p>Horizontal processes and endless discussion substituted for actual work. Speculation drifts into stated fact. Plans elaborate indefinitely because elaborating feels like progress.</p>
+  <p><strong>Addressed by:</strong> Reality vs. Workspace discipline, Session Closeout Protocol, explicit falsification conditions.</p>
+</div>
+
+<div class="component">
+  <div class="component-header">
+    <span class="component-name">Search returns flat noise</span>
+    <span class="component-tag">Failure</span>
+  </div>
+  <p>You search the vault during a live demo for a specific card and the result list is ten unranked hits with no way to discriminate. A generic section heading on an unrelated card outranks the canonical card you actually need.</p>
+  <p><strong>Addressed by:</strong> Vault Card Discipline — 6-part standard with aliases, keywords, Search Anchors section, and contextual wikilinks.</p>
+</div>
+
+<div class="component">
+  <div class="component-header">
+    <span class="component-name">External meetings as transactions</span>
+    <span class="component-tag">Failure</span>
+  </div>
+  <p>Meeting prep focused on what to pitch instead of what the other person actually needs. Listening as a performance, not a posture. Mechanical note-taking that captures words and misses signal.</p>
+  <p><strong>Addressed by:</strong> Meeting Prep and Close Protocol — three compliments, two listening prompts, "do not pitch in the first 10 minutes" stated literally in the prep doc.</p>
+</div>
+
+<div class="component">
+  <div class="component-header">
+    <span class="component-name">Same mistakes every session</span>
+    <span class="component-tag">Failure</span>
+  </div>
+  <p>You correct your AI partner on the same thing repeatedly. The correction never sticks because there's no persistent substrate to hold it. Each session starts from the same blank slate.</p>
+  <p><strong>Addressed by:</strong> Feedback Rule Pattern — cross-session memory files that turn every correction into a durable rule.</p>
+</div>
+</section>
+
+<!-- 03 BENEFITS -->
+<section id="benefits">
+<h2><span class="num">03</span>Benefits</h2>
+
+<p class="section-intro">What you actually get from adopting two or three components — not the whole system. These are the felt differences, not the theoretical ones.</p>
+
+<h3>Sessions feel like continuation, not cold starts</h3>
+<p>Because the AI reads a fixed boot sequence and a set of memory files before responding to anything, the first turn of every conversation lands with full context loaded. No "catch me up" overhead.</p>
+
+<h3>Mistakes don't repeat</h3>
+<p>When the user corrects the AI on something — a misquoted number, a missed rule, a drift pattern — the correction gets written to a feedback memory file and loaded automatically in every future session. Three corrections becomes three durable rules. Ten corrections becomes a failure-pattern catalog that actively prevents regression.</p>
+
+<h3>Prep time drops because the scaffolding is always there</h3>
+<p>Every external meeting uses the same prep protocol. Every vault card uses the same template. Every research output uses the same synthesis pattern. The scaffolding is boring by design, which is what makes it fast.</p>
+
+<h3>Knowledge compounds</h3>
+<p>People, organizations, concepts, meetings, and decisions all live in one wiki-linked graph. A note written today surfaces in six months when a related person comes up in conversation. The second brain isn't a metaphor — it's a measurable effect.</p>
+
+<h3>Your AI partner gets sharper over time</h3>
+<p>The longer the feedback memory layer runs, the fewer mistakes the AI makes per hour of dense work. The substrate of corrections becomes a personalized alignment layer on top of the base model.</p>
+
+<h3>External meetings feel like conversations, not transactions</h3>
+<p>Prep docs start with three specific compliments and two listening prompts. The protocol states literally: <em>do not pitch in the first 10 minutes.</em> The posture change is measurable in how the meetings actually go.</p>
+
+<h3>You can ship faster without lowering standards</h3>
+<p>Parallel research agents with a shared output contract can produce eight structured reports in 15 minutes. A well-maintained vault makes week-old context instantly retrievable. A disciplined closeout protocol means nothing falls between sessions.</p>
+</section>
+
+<!-- 04 HOW -->
+<section id="how-we-use-it">
+<h2><span class="num">04</span>How we use the container</h2>
+
+<p class="section-intro">The daily and weekly rhythm. This is how the pieces actually work together in practice, not how they're labeled in the catalog below.</p>
+
+<h3>Two-agent architecture</h3>
+
+<div class="diagram">
+  <span class="hl">COWORK</span> <span class="dim">(claude.ai)</span>                  <span class="hl">CLI</span> <span class="dim">(claude code)</span>
+      |                                    |
+   strategy                              execution
+   planning                              building
+   synthesis                             real-time tools
+      |                                    |
+      +--------------+---------------------+
+                     |
+                     v
+              <span class="hl">VAULT</span> <span class="dim">(obsidian)</span>
+                     |
+         reality/    workspace/    People/
+          (truth)   (speculation) (contacts)
+         concepts/   meetings/    decisions/
+                     |
+            <span class="dim">persistent across sessions</span>
+</div>
+
+<p>Cowork is the strategy environment — browser-based, long-running context, good at synthesis and planning. CLI is the execution environment — tool access, file system, real-time APIs, good at building. The vault is the bridge: both tools read and write to it, and it persists everything.</p>
+
+<p>The mental model: <strong>Cowork is RAM, CLI is hands, vault is long-term memory.</strong></p>
+
+<h3>Reality vs. Workspace discipline</h3>
+
+<p>One folder in the vault is called <code>reality/</code>. It contains the canonical operational truth — what's actually happening right now, confirmed, in motion. Nothing moves into <code>reality/</code> without explicit user confirmation. Everything else — brainstorming, speculation, research, drafts — lives in <code>workspace/</code>.</p>
+
+<p>This single discipline does more to prevent drift than any other rule in the system. If a claim isn't in <code>reality/</code>, it isn't real yet. When in doubt, check.</p>
+
+<h3>Daily rhythm</h3>
+
+<ul>
+  <li><strong>Session start:</strong> AI runs the 7-step boot sequence — reads orientation, user profile, session boot protocol, mirror agent protocol, open questions, and the most recent session note. Takes 15 seconds of tool calls. Then pulls today's calendar and the action queue. Then delivers a tight briefing.</li>
+  <li><strong>Active work:</strong> Mirror Agent protocol runs silently as pre-action reflection — watching for named failure patterns like temporal confusion, solution fixation, QA skipping, blocker absorption. When a pattern is firing, it intervenes.</li>
+  <li><strong>External meetings:</strong> Prep uses the Meeting Prep and Close Protocol. Post-meeting, close loop writes a structured meeting note with tagged participants and updates affected vault cards.</li>
+  <li><strong>Session end:</strong> Closeout protocol writes a session note, syncs the task queue, updates state files only if operational truth changed, and optionally saves a snapshot.</li>
+</ul>
+
+<h3>Weekly and monthly rhythm</h3>
+
+<ul>
+  <li><strong>Daily briefing</strong> — scheduled task runs every morning, scans email and calendar, produces a short brief. Delivered via chat channel.</li>
+  <li><strong>Morning intelligence scan</strong> — scheduled task monitors named sources for signal, writes to <code>Briefings/</code>.</li>
+  <li><strong>Weekly deep research</strong> — scheduled task runs longer research agents on standing questions, writes to <code>workspace/session-logs/research/</code>.</li>
+  <li><strong>Bi-weekly reality check</strong> — scheduled task audits <code>reality/STATE.md</code> against current truth and flags drift.</li>
+</ul>
+
+<h3>What gets written to disk vs. held in context</h3>
+
+<p>Conversation state is ephemeral. Anything that should survive a session end gets written to the vault as a proper card (Person, Organization, Concept, Meeting, Decision) following the Vault Card Discipline. Anything speculative goes in <code>workspace/</code>. Anything operationally true goes in <code>reality/</code> only with explicit confirmation.</p>
+</section>
+
+<!-- 05 CORE TOOLS -->
+<section id="core-tools">
+<h2><span class="num">05</span>Core tools</h2>
+
+<p class="section-intro">Third-party applications and CLIs that form the base of the setup. Install these first — everything else sits on top.</p>
+
+<div class="component" id="obsidian">
+  <div class="component-header">
+    <span class="component-name">Obsidian</span>
+    <span class="component-tag">Tool</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">Local-first markdown knowledge graph editor.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Hosts the entire vault — people, organizations, concepts, meetings, decisions, directives, templates. Canonical source of truth. Files are plain markdown so any other tool can read them.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value">Desktop app — install from your platform's package manager or the official download.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Nothing</div></div>
+</div>
+
+<div class="component" id="claude-code">
+  <div class="component-header">
+    <span class="component-name">Claude Code CLI</span>
+    <span class="component-tag">Tool</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">Anthropic's command-line interface for Claude, with tool access, file system, MCP support, and a skills framework.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">The execution environment. Reads and writes the vault, calls MCP servers, runs scheduled tasks, orchestrates parallel research agents.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value"><code>npm install -g @anthropic-ai/claude-code</code> or install the native binary from the official download.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Node.js (for npm install path) or native installer. An Anthropic API key or Claude subscription.</div></div>
+</div>
+
+<div class="component" id="claude-ai">
+  <div class="component-header">
+    <span class="component-name">Claude.ai (Cowork)</span>
+    <span class="component-tag">Tool</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">The web-based Claude environment, used here as the strategy and synthesis lane.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Strategy, planning, research synthesis, brainstorming. Complements the CLI — Cowork is for thinking, CLI is for building.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value">No install — visit claude.ai in a browser and sign in.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Claude subscription for Connectors and longer context.</div></div>
+</div>
+
+<div class="component" id="git">
+  <div class="component-header">
+    <span class="component-name">Git</span>
+    <span class="component-tag">Tool</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">Version control.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Backs up the vault. Tracks changes to session logs, state files, and custom patterns over time. Enables restore if something breaks.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value">Install via your platform package manager (e.g. <code>winget install Git.Git</code>, <code>brew install git</code>, <code>apt install git</code>).</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Nothing</div></div>
+</div>
+</section>
+
+<!-- 06 MCP SERVERS -->
+<section id="mcp-servers">
+<h2><span class="num">06</span>MCP servers</h2>
+
+<p class="section-intro">Model Context Protocol servers are the integration layer between Claude Code and external services. Each one exposes a set of tools Claude can call directly. Install only what you actually need — each server adds tools to every session's context window.</p>
+
+<div class="callout warn">
+  <div class="callout-label">Context cost warning</div>
+  <p>MCP servers add their tool definitions to every session's context. A large MCP stack can easily consume 100k+ tokens per turn before you write a single word. Audit periodically — if you have a server with 90 tools you use twice a month, remove it.</p>
+</div>
+
+<div class="component" id="google-workspace-mcp">
+  <div class="component-header">
+    <span class="component-name">google-workspace-mcp</span>
+    <span class="component-tag">MCP</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">MCP server exposing Gmail, Calendar, Drive, Docs, Sheets, Slides, Tasks, Forms, Chat, Contacts, and related Google services.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Primary integration for every session. Calendar pulls, email search, Drive file access, Docs read/write. Used every day.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value"><code>pipx install workspace-mcp</code> then configure OAuth client secret path via env vars.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Medium — OAuth setup is the friction, not the install itself.</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Python, pipx, a Google Cloud project with OAuth configured.</div></div>
+</div>
+
+<div class="component" id="playwright-mcp">
+  <div class="component-header">
+    <span class="component-name">playwright-mcp</span>
+    <span class="component-tag">MCP</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">Browser automation MCP server — gives Claude Chromium access for navigation, clicks, form fills, and screenshots.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Fallback for broken or missing APIs. When a web service has no MCP connector and no public API, Playwright drives a real browser.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value"><code>npx @playwright/mcp@latest</code> (on Windows, wrap with <code>cmd /c</code> in your MCP config to avoid launch issues).</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low — <em>except for Windows path-handling quirks</em>.</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Node.js. On Windows, requires the <code>cmd /c</code> wrapper in MCP config.</div></div>
+</div>
+
+<div class="component" id="n8n-mcp">
+  <div class="component-header">
+    <span class="component-name">n8n-mcp</span>
+    <span class="component-tag">MCP</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">MCP server for n8n — the self-hostable automation platform. Gives Claude the ability to list, create, update, and trigger n8n workflows.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Bridges Claude to a self-hosted automation layer. Workflows authored in n8n become callable from Claude Code.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value"><code>npx -y n8n-mcp</code> with <code>N8N_API_URL</code> and <code>N8N_API_KEY</code> set as environment variables.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Medium — requires a running n8n instance.</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">n8n running locally or remotely, and an n8n API key.</div></div>
+</div>
+
+<div class="component" id="searchatlas-mcp">
+  <div class="component-header">
+    <span class="component-name">searchatlas-mcp-server</span>
+    <span class="component-tag">MCP</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">MCP server for SearchAtlas (SEO, keyword research, site audits, LLM visibility).</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Direct SEO tool access inside Claude sessions. Supports client SEO work without leaving the CLI.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value"><code>npx -y searchatlas-mcp-server</code></div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">SearchAtlas account and API credentials.</div></div>
+</div>
+
+<div class="component" id="claude-ai-connectors">
+  <div class="component-header">
+    <span class="component-name">Claude.ai managed connectors</span>
+    <span class="component-tag">MCP</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">Anthropic-managed MCP connectors configured via the Claude.ai web UI — currently used here for ClickUp, Notion, Slack, Gmail, Google Calendar, and Telegram-adjacent tooling.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Zero-maintenance access to several services without running local MCP processes. Authenticated through Claude.ai's own OAuth flow.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value">No command — open Claude.ai settings, navigate to Connectors, enable the ones you want, and complete OAuth. Then they're available in Cowork and (for supported connectors) Claude Code.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Claude subscription with Connectors enabled.</div></div>
+</div>
+</section>
+
+<!-- 07 SKILL PACKS -->
+<section id="skill-packs">
+<h2><span class="num">07</span>Skill packs</h2>
+
+<p class="section-intro">Collections of Claude Code skills and commands built by the community. Each pack is a library of reusable patterns — adopt individual skills, don't adopt the whole pack unless you know you'll use it.</p>
+
+<div class="component" id="oh-my-claudecode">
+  <div class="component-header">
+    <span class="component-name">oh-my-claudecode</span>
+    <span class="component-tag">Skill pack</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">Skills, commands, and agents for Claude Code — includes orchestration helpers, tmux team modes, ralph loops, autopilot, and a planning toolchain.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Provides ready-made agents and orchestration patterns — team execution, autopilot runs, deep interview flows.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value">Install via the project's setup command — check the project documentation for the current install pattern. Typical path is a plugin install via Claude Code's plugin interface.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Medium — lots of surface area; pick a few things before installing everything.</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Claude Code CLI</div></div>
+</div>
+
+<div class="component" id="everything-claude-code">
+  <div class="component-header">
+    <span class="component-name">everything-claude-code</span>
+    <span class="component-tag">Skill pack</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">Broad skill and agent library covering language-specific reviewers, build resolvers, test runners, and domain-specific workflows (Python, TypeScript, Go, Rust, C++, Swift, Kotlin, Spring Boot, Django, Laravel, and more).</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Turnkey code review, build resolution, and testing skills per language. Useful when working across multiple stacks.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value">Install via the project's setup command — check the project documentation for the current install pattern.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Medium</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Claude Code CLI</div></div>
+</div>
+
+<div class="component" id="superpowers">
+  <div class="component-header">
+    <span class="component-name">superpowers</span>
+    <span class="component-tag">Skill pack</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">A skills library focused on meta-work: brainstorming, planning, TDD, systematic debugging, verification-before-completion, writing-plans, receiving-code-review, and similar process disciplines.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Enforces process disciplines that are easy to skip. The brainstorming and systematic-debugging skills in particular are worth using standalone.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value">Install via the project's setup command — check the project documentation for the current install pattern.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Claude Code CLI</div></div>
+</div>
+
+<div class="component" id="claude-mem">
+  <div class="component-header">
+    <span class="component-name">claude-mem</span>
+    <span class="component-tag">Skill pack</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">Persistent cross-session memory database with search and timeline tools — gives Claude the ability to query past sessions by keyword or chronology.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Supplements the feedback rule memory with a searchable session history. Useful for "did we already solve this?" queries.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value">Install via the project's setup command — check the project documentation for the current install pattern.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Claude Code CLI</div></div>
+</div>
+
+<div class="component" id="gsd-commands">
+  <div class="component-header">
+    <span class="component-name">gsd (Get Shit Done) command suite</span>
+    <span class="component-tag">Skill pack</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">A workflow of slash commands for project planning, phase execution, plan verification, debugging with persistent state, and milestone tracking. Opinionated about how to move from idea to shipped code.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Enforces a plan → execute → verify loop with checkpoints that survive context resets. Useful for longer-running projects.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value">Install via the project's setup command — check the project documentation for the current install pattern.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Medium — high-leverage but opinionated.</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Claude Code CLI</div></div>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Honest note on skill packs</div>
+  <p>Each of these packs bundles many skills. The highest-leverage move is usually installing the pack and then <em>only</em> using two or three skills from it. Don't feel obligated to use the whole thing. The brainstorming skill from superpowers, the systematic-debugging skill, and any specific code-reviewer for your language are the typical starter picks.</p>
+</div>
+</section>
+
+<!-- 08 CUSTOM PATTERNS -->
+<section id="custom-patterns">
+<h2><span class="num">08</span>Custom patterns</h2>
+
+<p class="section-intro">These aren't packages you install — they're disciplines and file structures you build into your own vault. They're where the actual leverage lives, and they're what turn a pile of tools into a working system.</p>
+
+<div class="component" id="session-boot">
+  <div class="component-header">
+    <span class="component-name">Session Boot Protocol</span>
+    <span class="component-tag pattern">Pattern</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">A fixed 7-step ritual the AI runs at the start of every session — read orientation file, read user profile, read session boot protocol, read mirror agent protocol, read open questions, read most recent session note, pull calendar and task queue.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Eliminates session cold starts. Every conversation begins with full context loaded. The first turn lands with the AI already oriented.</div></div>
+  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Create a <code>CLAUDE.md</code> file at the root of your working directory with explicit instructions to read a named set of files before responding to any user message.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Obsidian (or any vault), Claude Code CLI, a handful of profile/context files.</div></div>
+</div>
+
+<div class="component" id="vault-card-discipline">
+  <div class="component-header">
+    <span class="component-name">Vault Card Discipline</span>
+    <span class="component-tag pattern">Pattern</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">A 6-part standard for every note in the vault: (1) frontmatter with <code>aliases</code> and <code>keywords</code> fields, (2) section headers containing the canonical name, (3) a dedicated Search Anchors section listing terms the card should surface for, (4) wikilinks with context not bare names, (5) a one-line context blockquote at the top, (6) enforcement via templates.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Search returns ranked, discriminable results instead of flat noise. The vault becomes a reliable recall layer during live conversation, not a folder of hopes.</div></div>
+  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Write a directive file with the 6-part standard, update your Person / Organization / Concept / Meeting templates to include all six parts, and apply the standard to every new card. Backfill existing cards opportunistically.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low to adopt, Medium to maintain.</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Obsidian or any markdown vault with search.</div></div>
+</div>
+
+<div class="component" id="mirror-agent">
+  <div class="component-header">
+    <span class="component-name">Mirror Agent Protocol</span>
+    <span class="component-tag pattern">Pattern</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">A pre-action reflection discipline loaded into the AI's own loop. It watches for named failure modes — temporal confusion, solution fixation, scope drift, QA skipping, confident fabrication, blocker absorption, sycophantic drift — and intervenes before they compound. The failure pattern list grows as the user catches new patterns.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Catches delusional drift before it leaves the AI's output. The mirror's success is measured by what the user no longer has to correct. Failure rate drops across sessions as the pattern catalog grows.</div></div>
+  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Create a protocol file listing named failure patterns, each with a signal (what the AI is doing when the pattern fires), a check (the question to ask), and an action (what to do instead). Reference the file from your CLAUDE.md boot sequence. Add new patterns as you catch them.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">High (cultural) — the discipline is harder than the file.</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">A user who is willing to correct the AI directly and specifically. Without that, there's nothing to learn from.</div></div>
+</div>
+
+<div class="component" id="feedback-rule-pattern">
+  <div class="component-header">
+    <span class="component-name">Feedback Rule Pattern</span>
+    <span class="component-tag pattern">Pattern</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">Cross-session memory files structured as rule / why / how to apply. Every correction the user gives becomes a durable file loaded automatically on every future session.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Mistakes don't repeat. Corrections compound. Over time the feedback memory becomes a personalized alignment layer.</div></div>
+  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Create a <code>memory/</code> folder. Index it with a <code>MEMORY.md</code> file that lists each rule as a one-line pointer. When the AI gets corrected, it writes a new <code>feedback_&lt;topic&gt;.md</code> file with the rule, the reason (why the user cares about it), and how to apply it in edge cases. Reference the index in your boot sequence.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low to adopt, compounding over time.</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Session Boot Protocol (or equivalent) to load the files.</div></div>
+</div>
+
+<div class="component" id="session-curator">
+  <div class="component-header">
+    <span class="component-name">Session Curator Skill</span>
+    <span class="component-tag pattern">Pattern</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">A Claude Code skill with three modes: startup (run the boot sequence, deliver briefing), closeout (write session note, sync tasks, update state files), and briefing (on-demand status). The connective tissue between sessions.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Ensures nothing falls through the cracks between sessions. Closeout writes a structured meeting note to <code>Meetings/</code>, syncs the task queue, and updates any operational truth that changed.</div></div>
+  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Create a skill file at <code>.claude/skills/session-curator/SKILL.md</code> with three modes documented. Reference it from your CLAUDE.md. Invoke at the start and end of every session.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Medium</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Claude Code CLI, Session Boot Protocol, a vault structure for session notes.</div></div>
+</div>
+
+<div class="component" id="meeting-prep-close">
+  <div class="component-header">
+    <span class="component-name">Meeting Prep and Close Protocol</span>
+    <span class="component-tag pattern">Pattern</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">A template for external meeting prep docs. Every prep has: three specific compliments (evidence-based, not generic), two listening prompts (open questions about what's hard or exciting for the other person), what they said last time (verbatim), what they wanted last time (unresolved asks), the literal instruction "do not pitch in the first 10 minutes," standing threads to revisit, and deliverables exchange.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Converts external meetings from transactions into conversations. The listening posture is built into the document structure, not left to willpower in the moment.</div></div>
+  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Create a template file with the eight sections. Apply to every external sync meeting. Write a matching close-out template for the 24-hour follow-through.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low to adopt, High to hold under pressure.</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">A vault that holds prior meeting notes you can reference.</div></div>
+</div>
+
+<div class="component" id="two-agent-architecture">
+  <div class="component-header">
+    <span class="component-name">Two-Agent Architecture</span>
+    <span class="component-tag pattern">Pattern</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">An explicit division of labor between two AI environments — Cowork (Claude.ai) for strategy, planning, and synthesis; CLI (Claude Code) for execution, building, and real-time tool access. A shared vault as the persistent bridge.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Neither tool is best at both. Cowork is better for open-ended thinking and extended context. CLI is better for tool orchestration and direct file work. Separating their jobs reduces friction and improves both outputs.</div></div>
+  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Designate one environment as strategy lane, the other as execution lane. Commit to writing anything that crosses between them into the vault, not into chat history. Add a short architecture note to your CLAUDE.md explaining the division to your AI partners.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Both environments and a shared vault.</div></div>
+</div>
+
+<div class="component" id="reality-workspace">
+  <div class="component-header">
+    <span class="component-name">Reality vs. Workspace Discipline</span>
+    <span class="component-tag pattern">Pattern</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">A hard folder boundary. <code>reality/</code> contains only confirmed operational truth — what's actually happening right now. Everything else — drafts, speculation, research, brainstorming — lives in <code>workspace/</code>. Nothing moves into <code>reality/</code> without explicit confirmation.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Prevents speculation from hardening into stated fact. When checking whether a claim is real, the answer is literally <em>"is it in <code>reality/</code>?"</em></div></div>
+  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Create <code>reality/</code> and <code>workspace/</code> as top-level folders. Move anything confirmed into <code>reality/</code>. Add a rule to your CLAUDE.md: nothing moves into <code>reality/</code> without explicit user confirmation.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low to adopt, Medium to enforce.</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">A vault and the willingness to hold the boundary.</div></div>
+</div>
+
+<div class="component" id="self-card">
+  <div class="component-header">
+    <span class="component-name">Self-card Pattern</span>
+    <span class="component-tag pattern">Pattern</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">An invitation to your AI partner to write its own entity card — naming its model, its substrate dependencies (files it needs to load to be "itself" in this working relationship), its observed failure modes, and its honest uncertainty about its own phenomenology.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Gives the AI a persistent ground-truth self-description that survives session boundaries. Feeds directly into the mirror agent protocol. Makes the working relationship explicit and inspectable.</div></div>
+  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Ask your AI partner to write a card describing itself as an operating entity in relation to your work, including known failure modes and what it needs to function well. File it in the vault. Update it as the relationship evolves.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low technically, High conceptually.</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Mirror Agent Protocol (the card is load-bearing for the mirror).</div></div>
+</div>
+
+<div class="component" id="parallel-research">
+  <div class="component-header">
+    <span class="component-name">Parallel Research Agent Pattern</span>
+    <span class="component-tag pattern">Pattern</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">Spawning N research sub-agents in a single message, each with a shared structured output contract. A synthesis step merges their outputs into a single vault asset.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Eight structured reports in 15 minutes instead of one report in two hours. Each agent covers a distinct subtopic with consistent field shapes so synthesis is mechanical.</div></div>
+  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Write a shared prompt template with a consistent output contract (e.g., "for each topic, deliver: canonical examples, governance, capitalization, exit, failure modes, 2024-26 state, mapping to our work, uncertainty flags"). Spawn N agents in a single message. Synthesize their outputs into one vault file with consistent section headers.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Medium</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Claude Code CLI with sub-agent tool access.</div></div>
+</div>
+</section>
+
+<!-- 09 FIRST FIVE -->
+<section id="first-five">
+<h2><span class="num">09</span>First five to try</h2>
+
+<p class="section-intro">If you adopt nothing else, adopt these five. They are the minimum viable setup — enough to feel the leverage without overcommitting to infrastructure you don't need yet.</p>
+
+<div class="first-five">
+<ol>
+  <li><strong>Obsidian</strong> — your vault. Everything else sits on top of this.</li>
+  <li><strong>Claude Code CLI</strong> — your execution environment.</li>
+  <li><strong>Vault Card Discipline</strong> — the 6-part standard applied to one template. Start with Person or Concept. The search payoff shows up within a week.</li>
+  <li><strong>Session Boot Protocol</strong> — a CLAUDE.md that reads three files before the first turn. Cold starts disappear.</li>
+  <li><strong>Mirror Agent Protocol</strong> — begin with an empty failure pattern list. Add a new entry every time you catch yourself correcting the same thing twice. Within a month you'll have a personalized failure catalog that the AI actively watches for.</li>
+</ol>
+</div>
+
+<div class="callout success">
+<div class="callout-label">Why these five</div>
+<p>These are the ones where the leverage shows up fastest. Every other component in the catalog compounds from this foundation. The MCP servers, the skill packs, the scheduled tasks, the two-agent architecture — all of them work better when these five are already in place.</p>
+<p><strong>Add one new component per week at most.</strong> Any faster and you won't feel the effect of what you just added.</p>
+</div>
+</section>
+
+<footer>
+  <div class="meta-row">
+    <span>SNAPSHOT · 2026-04-08</span>
+    <span>·</span>
+    <span>REFERENCE ONLY</span>
+    <span>·</span>
+    <span>NOT MAINTAINED</span>
+  </div>
+  <p>This is not a maintained project. Tools evolve, commands change, patterns deepen.<br>
+  If you're reading this much later than the snapshot date, verify before installing anything.</p>
+</footer>
+
+</main>
+</body>
+</html>
