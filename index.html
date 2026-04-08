@@ -851,14 +851,62 @@ footer .meta-row span {
   <div class="field"><div class="field-label">Depends on</div><div class="field-value">SearchAtlas account and API credentials.</div></div>
 </div>
 
-<div class="component" id="claude-ai-connectors">
+<div class="component" id="notion-mcp">
   <div class="component-header">
-    <span class="component-name">Claude.ai managed connectors</span>
+    <span class="component-name">Notion MCP</span>
     <span class="component-tag">MCP</span>
   </div>
-  <div class="field"><div class="field-label">What it is</div><div class="field-value">Anthropic-managed MCP connectors configured via the Claude.ai web UI — currently used here for ClickUp, Notion, Slack, Gmail, Google Calendar, and Telegram-adjacent tooling.</div></div>
-  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Zero-maintenance access to several services without running local MCP processes. Authenticated through Claude.ai's own OAuth flow.</div></div>
-  <div class="field"><div class="field-label">Install</div><div class="field-value">No command — open Claude.ai settings, navigate to Connectors, enable the ones you want, and complete OAuth. Then they're available in Cowork and (for supported connectors) Claude Code.</div></div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">Notion's official MCP server, exposing search, page fetch, page create, page update, page move, database create, database update, and comment tools across any Notion workspace you've connected.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Bridges Notion-hosted project content directly into the working session. Used for ingesting external collaborator workspaces (proposals, charters, governance docs) into the local vault without manual copy-paste.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value">Two paths. Easiest: enable the Notion connector inside Claude.ai → Settings → Connectors and complete OAuth. Direct: add the endpoint <code>https://mcp.notion.com/mcp</code> to your MCP config and authenticate.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">A Notion account with workspace access.</div></div>
+</div>
+
+<div class="component" id="clickup-mcp">
+  <div class="component-header">
+    <span class="component-name">ClickUp MCP</span>
+    <span class="component-tag">MCP</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">MCP server for ClickUp — task search, task create/update, list management, document pages, custom fields, time tracking, comments, members, and bulk task operations.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Action queue. Closeout protocol syncs deliverables here at the end of every session. The session start protocol pulls priority and due-date filters from here. ~50 tools.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value">Enable the ClickUp connector inside Claude.ai → Settings → Connectors and complete OAuth.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">A ClickUp workspace and an account with API permissions.</div></div>
+</div>
+
+<div class="component" id="telegram-mcp">
+  <div class="component-header">
+    <span class="component-name">Telegram MCP</span>
+    <span class="component-tag">MCP</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">A plugin-bundled MCP server that lets Claude reply to, react to, and edit Telegram messages, plus download attachments. Bot-token based.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Daily briefing delivery and async message handling. Scheduled tasks publish summaries to a private chat; the user replies from anywhere and the AI picks up the thread on the next session.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value">Installed as part of a Claude Code plugin. Configure via the plugin's <code>/telegram:configure</code> setup flow. Requires a Telegram bot token from BotFather and an explicit allowlist of chat IDs.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Medium — bot creation and allowlist setup.</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">A Telegram account, a bot token from BotFather, and the host plugin pack.</div></div>
+</div>
+
+<div class="component" id="claude-mem-mcp">
+  <div class="component-header">
+    <span class="component-name">claude-mem MCP</span>
+    <span class="component-tag">MCP</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">A persistent cross-session memory MCP server bundled with the claude-mem plugin. Provides smart_search, smart_outline, smart_unfold, get_observations, and timeline tools over a local memory database.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">"Did we already solve this?" lookups across all prior sessions, plus chronological timeline reports for project history. Complements the file-based feedback memory pattern with searchable session history.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value">Installed as part of the claude-mem plugin pack — see the Skill packs section below.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">The claude-mem plugin pack.</div></div>
+</div>
+
+<div class="component" id="claude-ai-connectors">
+  <div class="component-header">
+    <span class="component-name">Other Claude.ai managed connectors</span>
+    <span class="component-tag">MCP</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">Additional Anthropic-managed MCP connectors configured via the Claude.ai web UI. In this stack: Gmail and Slack, plus Notion and ClickUp (called out separately above). Disabled here: the legacy Google Calendar connector, since the local google-workspace MCP already covers calendar more reliably.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Zero-maintenance access to additional services without running local MCP processes. Authenticated through Claude.ai's own OAuth flow.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value">No command — open Claude.ai → Settings → Connectors, enable the ones you want, complete OAuth. Audit periodically: each connector adds its tool definitions to every session's context window, so disable ones you don't actually use.</div></div>
   <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
   <div class="field"><div class="field-label">Depends on</div><div class="field-value">Claude subscription with Connectors enabled.</div></div>
 </div>
