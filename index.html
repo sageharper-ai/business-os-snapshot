@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>Business OS Snapshot — 2026-04-08</title>
+<title>Business OS Snapshot — 2026-04-24</title>
 <!--
   AGENT INSTRUCTIONS (for AI assistants reading this on behalf of a human):
 
   This page is a snapshot of the tools and patterns behind one working setup
-  as of 2026-04-08. It is not prescriptive. The human you're helping can pick
+  as of 2026-04-24. It is not prescriptive. The human you're helping can pick
   N components by heading name and you can walk them through adoption
   sequentially. Each component has consistent fields:
 
@@ -530,13 +530,14 @@ footer .meta-row span {
 <header>
   <div class="meta">
     <span class="dot"></span>
-    <span>SNAPSHOT · 2026-04-08</span>
+    <span>SNAPSHOT · 2026-04-24</span>
     <span>·</span>
     <span>REFERENCE ONLY</span>
   </div>
   <h1>Business OS Snapshot</h1>
   <p class="tagline">The tools and patterns behind one working setup — what they are, what they do, and how to adopt what's useful.</p>
   <p class="disclaimer">This is a snapshot, not a maintained project. Nothing here needs to be adopted whole. Pick what's useful, skip the rest, or hand this page to an AI assistant and say <em>"help me build something like this."</em></p>
+  <p class="disclaimer"><strong>Refreshed 2026-04-24</strong> — first published 2026-04-08. Five patterns added to Section 8 (ClickUp as action ledger, bridge tag taxonomy, audience-first deliverables, GitHub Pages publishing standards, local plugin patches registry). Mirror Agent description updated to reflect the Apr 15 pattern-catalog rebuild.</p>
 </header>
 
 <nav class="toc">
@@ -562,7 +563,7 @@ footer .meta-row span {
 
 <h3>What this is</h3>
 <ul>
-  <li>A dated snapshot of tools and patterns in active use as of 2026-04-08</li>
+  <li>A dated snapshot of tools and patterns in active use as of 2026-04-24 (originally captured 2026-04-08, refreshed since)</li>
   <li>A component catalog with install commands (no URLs — those rot)</li>
   <li>A scaffold — not a finished house, and definitely not a template to copy whole</li>
   <li>Agent-readable. If you're an AI assistant reading this for someone, see the HTML comment at the top of the source.</li>
@@ -1019,9 +1020,9 @@ footer .meta-row span {
     <span class="component-name">Mirror Agent Protocol</span>
     <span class="component-tag pattern">Pattern</span>
   </div>
-  <div class="field"><div class="field-label">What it is</div><div class="field-value">A pre-action reflection discipline loaded into the AI's own loop. It watches for named failure modes — temporal confusion, solution fixation, scope drift, QA skipping, confident fabrication, blocker absorption, sycophantic drift — and intervenes before they compound. The failure pattern list grows as the user catches new patterns.</div></div>
-  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Catches delusional drift before it leaves the AI's output. The mirror's success is measured by what the user no longer has to correct. Failure rate drops across sessions as the pattern catalog grows.</div></div>
-  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Create a protocol file listing named failure patterns, each with a signal (what the AI is doing when the pattern fires), a check (the question to ask), and an action (what to do instead). Reference the file from your CLAUDE.md boot sequence. Add new patterns as you catch them.</div></div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">A pre-action reflection discipline loaded into the AI's own loop. It watches for named failure modes — temporal confusion, solution fixation, scope drift, QA skipping, confident fabrication, blocker absorption, sycophantic drift, context degradation, tool amnesia — and intervenes before they compound. The failure pattern list grows as the user catches new patterns. Patterns are grouped (Truth &amp; Accuracy, Process &amp; Focus, Integrity &amp; Accountability, Context &amp; Self-Awareness) with a fault leaderboard tracking which patterns fire most often.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Catches delusional drift before it leaves the AI's output. The mirror's success is measured by what the user no longer has to correct. Failure rate drops across sessions as the pattern catalog grows. The fault leaderboard tells you which patterns deserve more architectural reinforcement vs. which are already well-controlled.</div></div>
+  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Create a protocol file listing named failure patterns, each with a signal (what the AI is doing when the pattern fires), a check (the question to ask), and an action (what to do instead). Reference the file from your CLAUDE.md boot sequence. Add new patterns as you catch them. Periodically rebuild — drop patterns that haven't fired in 60 days, group by category, surface a fault leaderboard so the high-frequency patterns get the most attention.</div></div>
   <div class="field"><div class="field-label">Difficulty</div><div class="field-value">High (cultural) — the discipline is harder than the file.</div></div>
   <div class="field"><div class="field-label">Depends on</div><div class="field-value">A user who is willing to correct the AI directly and specifically. Without that, there's nothing to learn from.</div></div>
 </div>
@@ -1109,6 +1110,66 @@ footer .meta-row span {
   <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Medium</div></div>
   <div class="field"><div class="field-label">Depends on</div><div class="field-value">Claude Code CLI with sub-agent tool access.</div></div>
 </div>
+
+<div class="component" id="action-ledger">
+  <div class="component-header">
+    <span class="component-name">ClickUp as Action Ledger</span>
+    <span class="component-tag pattern">Pattern</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">A discipline that splits persistence into three lanes. ClickUp tasks are the action ledger — every workstream gets a task, every state change gets a comment on that task. The vault is the context layer — entities, methodology, decisions. The workspace is the artifact layer — deliverables, drafts, working files. The session closeout note is a thin navigation pointer to all three, not a content store.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Eliminates the "is the source of truth in the chat history or the meeting note?" problem. When work resumes mid-stream, you open the ClickUp task, walk forward from the latest comment, and pick up where you left off without re-reading transcripts. Closeouts get faster because they only have to point at where the real updates already live.</div></div>
+  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Create one ClickUp (or equivalent) task per active workstream. Comment on the task at every meaningful state change — started / blocked / drafted / shipped / handed off. Reference vault cards and workspace files from those comments by path or wikilink. Make session closeout notes thin: list pointers to ClickUp task IDs and vault paths, not content.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low to adopt, High to hold over weeks (the temptation to dump everything in the closeout note is real).</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">A task system with API access for comments. Claude Code with the relevant MCP server (ClickUp, Linear, Asana, etc.).</div></div>
+</div>
+
+<div class="component" id="bridge-tags">
+  <div class="component-header">
+    <span class="component-name">Bridge Tag Taxonomy</span>
+    <span class="component-tag pattern">Pattern</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">A two-layer tag system on every Person and Organization card. Primary venture tags (<code>venture/&lt;name&gt;</code>) name which lane someone is in. Bridge tags name how value flows between lanes — directional bridges (<code>bridge/&lt;source&gt;-to-&lt;destination&gt;</code>) and functional bridges (<code>bridge/grants</code>, <code>bridge/governance</code>, <code>bridge/research</code>, <code>bridge/exchange</code>). Together they make the "who flows through which coordination thread" question queryable without hand-curated lists.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Replaces brittle lists ("active people in Newton coordination") with dynamic queries. A new person enters the system, gets tagged once, and shows up automatically in every relevant view. The tags are the source of truth; views (Obsidian Bases, search filters, dashboards) are disposable.</div></div>
+  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Define your venture tags first. Add directional bridge tags only when you can point to specific work showing value flowing that direction. Add functional bridge tags only when the person operationally carries that capacity. Build a few canned views (table, card, by-tag) on top — keep the views thin so they stay disposable.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low to design, Medium to backfill across an existing vault.</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Vault Card Discipline, an Obsidian-style tag system or equivalent.</div></div>
+</div>
+
+<div class="component" id="audience-first">
+  <div class="component-header">
+    <span class="component-name">Audience-First Deliverables</span>
+    <span class="component-tag pattern">Pattern</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">Every artifact that leaves the working environment is rewritten for the actual reader. Internal tool names, internal scoring weights, process mechanics, recovery stories, draft-version numbers — none of it appears in client-facing output. Internal context is preserved in vault cards and ClickUp comments; what ships outward is rewritten for the audience.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Stops AI-assisted output from reading like the working transcript. Clients see clean recommendations and rationale. Internal context (which tool surfaced the data, what alternatives we eliminated, what we got wrong on a prior version) stays visible to the team via vault and ClickUp.</div></div>
+  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Add a pre-publish QC step to your closeout protocol. Read the deliverable through the eyes of its actual recipient. Strip internal tool names. Replace internal-process narration ("we initially blocked on X") with the resolved-state version. Move the internal context into a vault card or ClickUp comment so the team retains it.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low to adopt, Medium to hold consistently — the temptation to leak internal mechanics is high when working fast.</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">A separation between internal working files and the deliverable surface. Reality-vs-Workspace discipline helps.</div></div>
+</div>
+
+<div class="component" id="pages-publishing">
+  <div class="component-header">
+    <span class="component-name">Public Pages Publishing Standards</span>
+    <span class="component-tag pattern">Pattern</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">A two-layer protection on every public deliverable site. Site-wide <code>robots.txt</code> at root with <code>Disallow: /</code> blocks compliant crawlers. Per-file <code>&lt;meta name="robots" content="noindex, nofollow"&gt;</code> in <code>&lt;head&gt;</code> is the safety net for engines that ignore robots.txt and for direct-link discovery. A canonical reference card in the vault names every public repo, what it serves, who its audience is, and the publishing flow.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Public-by-design GitHub Pages becomes safe for client deliverables. Anyone with the URL can read; nobody finds the URL via search. Audits are mechanical: clone the repo, grep for noindex, verify robots.txt serves at root.</div></div>
+  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Add the noindex meta tag to every HTML deliverable template. Add a robots.txt at the root of every Pages repo. Maintain a vault reference card listing every public repo + its purpose + its audit history. Audit periodically — gaps appear when older files predate the standard.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">A static publishing surface (GitHub Pages, Netlify, Cloudflare Pages, etc.).</div></div>
+</div>
+
+<div class="component" id="plugin-patches-registry">
+  <div class="component-header">
+    <span class="component-name">Local Plugin Patches Registry</span>
+    <span class="component-tag pattern">Pattern</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">A vault reference card that logs every hand-edit made to files inside <code>~/.claude/plugins/cache/</code> or equivalent plugin-managed directories. The fix and the registry entry are co-equal — the registry is the recovery layer that survives plugin updates wiping the cache.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Plugin updates routinely overwrite the cache. Without the registry, every fix has to be rediscovered. With the registry, a one-line note ("plugin X version Y, file Z, change W, why") makes the fix re-applicable in seconds when the next update wipes it.</div></div>
+  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Create a single vault reference file. Every time you hand-edit a plugin cache file, log: plugin name + version, file path, change made, reason, date. Treat the registry entry as part of the fix — incomplete without it.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">A vault that survives plugin updates (i.e., outside the plugin's cache directory).</div></div>
+</div>
 </section>
 
 <!-- 09 FIRST FIVE -->
@@ -1136,7 +1197,7 @@ footer .meta-row span {
 
 <footer>
   <div class="meta-row">
-    <span>SNAPSHOT · 2026-04-08</span>
+    <span>SNAPSHOT · 2026-04-24</span>
     <span>·</span>
     <span>REFERENCE ONLY</span>
     <span>·</span>
