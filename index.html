@@ -1180,4 +1180,82 @@ footer .meta-row span {
   <div class="field"><div class="field-label">What it is</div><div class="field-value">A two-layer protection on every public deliverable site. Site-wide <code>robots.txt</code> at root with <code>Disallow: /</code> blocks compliant crawlers. Per-file <code>&lt;meta name="robots" content="noindex, nofollow"&gt;</code> in <code>&lt;head&gt;</code> is the safety net for engines that ignore robots.txt and for direct-link discovery. A canonical reference card in the vault names every public repo, what it serves, who its audience is, and the publishing flow.</div></div>
   <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Public-by-design GitHub Pages becomes safe for client deliverables. Anyone with the URL can read; nobody finds the URL via search. Audits are mechanical: clone the repo, grep for noindex, verify robots.txt serves at root.</div></div>
   <div class="field"><div class="field-label">Adopt</div><div class="field-value">Add the noindex meta tag to every HTML deliverable template. Add a robots.txt at the root of every Pages repo. Maintain a vault reference card listing every public repo + its purpose + its audit history. Audit periodically — gaps appear when older files predate the standard.</div></div>
-  <div class
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">A static publishing surface (GitHub Pages, Netlify, Cloudflare Pages, etc.).</div></div>
+</div>
+
+<div class="component" id="plugin-patches-registry">
+  <div class="component-header">
+    <span class="component-name">Local Plugin Patches Registry</span>
+    <span class="component-tag pattern">Pattern</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">A vault reference card that logs every hand-edit made to files inside <code>~/.claude/plugins/cache/</code> or equivalent plugin-managed directories. The fix and the registry entry are co-equal — the registry is the recovery layer that survives plugin updates wiping the cache.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Plugin updates routinely overwrite the cache. Without the registry, every fix has to be rediscovered. With the registry, a one-line note ("plugin X version Y, file Z, change W, why") makes the fix re-applicable in seconds when the next update wipes it.</div></div>
+  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Create a single vault reference file. Every time you hand-edit a plugin cache file, log: plugin name + version, file path, change made, reason, date. Treat the registry entry as part of the fix — incomplete without it.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">A vault that survives plugin updates (i.e., outside the plugin's cache directory).</div></div>
+</div>
+
+<div class="component" id="deck-production">
+  <div class="component-header">
+    <span class="component-name">Deck Production Workflow</span>
+    <span class="component-tag pattern">Pattern</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">A four-stage pipeline for building presentations from a complex idea: Canvas (free thinking) → Deck Iteration (structure and sequencing) → Slidedoc (slide-by-slide content with full speaker notes) → NotebookLM (audio + further synthesis). Each stage has an explicit gate before moving forward — no slide design until the structure is locked, no audio until the slidedoc is final.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Prevents the "make a deck" trap where you start designing slides before knowing what the deck is for. Each stage is short and bounded, and the gate discipline keeps speculation upstream of polish. Same pipeline serves funder briefings, internal strategy decks, and external pitches.</div></div>
+  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Create a template for each of the four artifacts (canvas, deck-iteration, slidedoc, notebooklm-source). Run new decks through them in order. Don't skip — the gates are doing the work.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low to adopt, Medium to hold under deadline pressure.</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">A vault that holds the four templates; optional NotebookLM access for the final stage.</div></div>
+</div>
+
+<div class="component" id="methodology-operating-protocol">
+  <div class="component-header">
+    <span class="component-name">Methodology Operating Protocol</span>
+    <span class="component-tag pattern">Pattern</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">A meta-pattern for codifying any domain methodology you're developing — research framework, design system, evaluation rubric, governance model — into vault concept cards with consistent structure: definition, layers or components, falsification conditions, application notes, evolution log. Each card is a load-bearing concept; together they form a coherent operating system for the methodology.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Stops methodology from living only in the head of whoever's actively working on it. Concept cards are queryable, link-able, and survive session boundaries. When the methodology evolves, you change one card; everything that links to it inherits the update. Reviewers can see the falsification conditions, not just the conclusions.</div></div>
+  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Pick a methodology you're actively building. List its load-bearing concepts (typically 5–10). Create one concept card per item using the same template — definition, layers, falsification, application, evolution. Cross-link aggressively. Add a top-level "operating protocol" card that names how the methodology gets used in practice (when to apply, when not to, who decides).</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Medium — the work is in resisting the urge to write essays instead of cards.</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Vault Card Discipline (the cards have to actually be searchable to compound).</div></div>
+</div>
+</section>
+
+<!-- 09 FIRST FIVE -->
+<section id="first-five">
+<h2><span class="num">09</span>First five to try</h2>
+
+<p class="section-intro">If you adopt nothing else, adopt these five. They are the minimum viable setup — enough to feel the leverage without overcommitting to infrastructure you don't need yet.</p>
+
+<div class="first-five">
+<ol>
+  <li><strong>Obsidian</strong> — your vault. Everything else sits on top of this.</li>
+  <li><strong>Claude Code CLI</strong> — your execution environment.</li>
+  <li><strong>Vault Card Discipline</strong> — the 6-part standard applied to one template. Start with Person or Concept. The search payoff shows up within a week.</li>
+  <li><strong>Session Boot Protocol</strong> — a CLAUDE.md that reads three files before the first turn. Cold starts disappear.</li>
+  <li><strong>Mirror Agent Protocol</strong> — begin with an empty failure pattern list. Add a new entry every time you catch yourself correcting the same thing twice. Within a month you'll have a personalized failure catalog that the AI actively watches for.</li>
+</ol>
+</div>
+
+<div class="callout success">
+<div class="callout-label">Why these five</div>
+<p>These are the ones where the leverage shows up fastest. Every other component in the catalog compounds from this foundation. The MCP servers, the skill packs, the scheduled tasks, the two-agent architecture — all of them work better when these five are already in place.</p>
+<p><strong>Add one new component per week at most.</strong> Any faster and you won't feel the effect of what you just added.</p>
+</div>
+</section>
+
+<footer>
+  <div class="meta-row">
+    <span>SNAPSHOT · 2026-05-06</span>
+    <span>·</span>
+    <span>REFERENCE ONLY</span>
+    <span>·</span>
+    <span>NOT MAINTAINED</span>
+  </div>
+  <p>This is not a maintained project. Tools evolve, commands change, patterns deepen.<br>
+  If you're reading this much later than the snapshot date, verify before installing anything.</p>
+</footer>
+
+</main>
+</body>
+</html>
