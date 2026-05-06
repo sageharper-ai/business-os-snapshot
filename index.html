@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>Business OS Snapshot — 2026-04-24</title>
+<title>Business OS Snapshot — 2026-05-06</title>
 <!--
   AGENT INSTRUCTIONS (for AI assistants reading this on behalf of a human):
 
   This page is a snapshot of the tools and patterns behind one working setup
-  as of 2026-04-24. It is not prescriptive. The human you're helping can pick
+  as of 2026-05-06. It is not prescriptive. The human you're helping can pick
   N components by heading name and you can walk them through adoption
   sequentially. Each component has consistent fields:
 
@@ -530,14 +530,14 @@ footer .meta-row span {
 <header>
   <div class="meta">
     <span class="dot"></span>
-    <span>SNAPSHOT · 2026-04-24</span>
+    <span>SNAPSHOT · 2026-05-06</span>
     <span>·</span>
     <span>REFERENCE ONLY</span>
   </div>
   <h1>Business OS Snapshot</h1>
   <p class="tagline">The tools and patterns behind one working setup — what they are, what they do, and how to adopt what's useful.</p>
   <p class="disclaimer">This is a snapshot, not a maintained project. Nothing here needs to be adopted whole. Pick what's useful, skip the rest, or hand this page to an AI assistant and say <em>"help me build something like this."</em></p>
-  <p class="disclaimer"><strong>Refreshed 2026-04-24</strong> — first published 2026-04-08. Five patterns added to Section 8 (ClickUp as action ledger, bridge tag taxonomy, audience-first deliverables, GitHub Pages publishing standards, local plugin patches registry). Mirror Agent description updated to reflect the Apr 15 pattern-catalog rebuild.</p>
+  <p class="disclaimer"><strong>Refreshed 2026-05-06</strong> — first published 2026-04-08, refreshed 2026-04-24. This update adds two Anthropic-verified Claude Code plugins to Section 7 (frontend-design, playground), two patterns to Section 8 (Deck Production Workflow, Methodology Operating Protocol), and a "Watch for" note on google-workspace-mcp covering the multi-account routing wrinkle. The 2026-04-24 refresh added five patterns to Section 8 (ClickUp as action ledger, bridge tag taxonomy, audience-first deliverables, GitHub Pages publishing standards, local plugin patches registry) and updated the Mirror Agent description.</p>
 </header>
 
 <nav class="toc">
@@ -563,7 +563,7 @@ footer .meta-row span {
 
 <h3>What this is</h3>
 <ul>
-  <li>A dated snapshot of tools and patterns in active use as of 2026-04-24 (originally captured 2026-04-08, refreshed since)</li>
+  <li>A dated snapshot of tools and patterns in active use as of 2026-05-06 (originally captured 2026-04-08, refreshed since)</li>
   <li>A component catalog with install commands (no URLs — those rot)</li>
   <li>A scaffold — not a finished house, and definitely not a template to copy whole</li>
   <li>Agent-readable. If you're an AI assistant reading this for someone, see the HTML comment at the top of the source.</li>
@@ -814,6 +814,7 @@ footer .meta-row span {
   <div class="field"><div class="field-label">Install</div><div class="field-value"><code>pipx install workspace-mcp</code> then configure OAuth client secret path via env vars.</div></div>
   <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Medium — OAuth setup is the friction, not the install itself.</div></div>
   <div class="field"><div class="field-label">Depends on</div><div class="field-value">Python, pipx, a Google Cloud project with OAuth configured.</div></div>
+  <div class="field"><div class="field-label">Watch for</div><div class="field-value">If you operate across multiple Google accounts, current service-account mode silently routes all queries to the SA principal regardless of the <code>user_google_email</code> parameter — a known issue that upstream PR #749 fixes but isn't yet in a tagged release. The workaround is split-tool routing: run workspace-mcp in <code>--single-user</code> mode for one account and use the Claude.ai managed Google connector for the others, with a per-surface routing table written into your <code>CLAUDE.md</code> so the AI partner picks the right tool every session.</div></div>
 </div>
 
 <div class="component" id="playwright-mcp">
@@ -977,6 +978,30 @@ footer .meta-row span {
   <div class="field"><div class="field-label">Install</div><div class="field-value">Install via the project's setup command — check the project documentation for the current install pattern.</div></div>
   <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Medium — high-leverage but opinionated.</div></div>
   <div class="field"><div class="field-label">Depends on</div><div class="field-value">Claude Code CLI</div></div>
+</div>
+
+<div class="component" id="frontend-design-plugin">
+  <div class="component-header">
+    <span class="component-name">frontend-design (Anthropic verified)</span>
+    <span class="component-tag">Skill pack</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">Anthropic's official frontend design plugin. A skill that auto-activates on frontend work and pushes the model to make a deliberate aesthetic choice (brutalist, maximalist, retro-futuristic, luxury, playful, etc.) before writing code — typography pairings, motion, spatial composition, depth.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Counters the default AI-flavored frontend look (system fonts, purple gradients, generic cards) when building landing pages, dashboards, or marketing sites. Activates automatically on frontend prompts; no slash command needed.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value"><code>claude plugin marketplace add https://github.com/anthropics/claude-plugins-official.git</code> then <code>claude plugin install frontend-design@claude-plugins-official</code>.</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Claude Code CLI and the <code>claude-plugins-official</code> marketplace.</div></div>
+</div>
+
+<div class="component" id="playground-plugin">
+  <div class="component-header">
+    <span class="component-name">playground (Anthropic verified)</span>
+    <span class="component-tag">Skill pack</span>
+  </div>
+  <div class="field"><div class="field-label">What it is</div><div class="field-value">Generates self-contained single-file HTML playgrounds — visual controls, live preview, and a natural-language prompt output with one-click copy. Six built-in templates: design, data explorer, concept map, document critique, diff review, code map.</div></div>
+  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Fast scaffolding for any "let me explore this interactively" prompt — visualizing options, building review UIs, or producing structured prompts you can paste back into Claude. No external dependencies; the output is one HTML file.</div></div>
+  <div class="field"><div class="field-label">Install</div><div class="field-value"><code>claude plugin install playground@claude-plugins-official</code> (after adding the <code>claude-plugins-official</code> marketplace as above).</div></div>
+  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
+  <div class="field"><div class="field-label">Depends on</div><div class="field-value">Claude Code CLI and the <code>claude-plugins-official</code> marketplace.</div></div>
 </div>
 
 <div class="callout">
@@ -1155,58 +1180,4 @@ footer .meta-row span {
   <div class="field"><div class="field-label">What it is</div><div class="field-value">A two-layer protection on every public deliverable site. Site-wide <code>robots.txt</code> at root with <code>Disallow: /</code> blocks compliant crawlers. Per-file <code>&lt;meta name="robots" content="noindex, nofollow"&gt;</code> in <code>&lt;head&gt;</code> is the safety net for engines that ignore robots.txt and for direct-link discovery. A canonical reference card in the vault names every public repo, what it serves, who its audience is, and the publishing flow.</div></div>
   <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Public-by-design GitHub Pages becomes safe for client deliverables. Anyone with the URL can read; nobody finds the URL via search. Audits are mechanical: clone the repo, grep for noindex, verify robots.txt serves at root.</div></div>
   <div class="field"><div class="field-label">Adopt</div><div class="field-value">Add the noindex meta tag to every HTML deliverable template. Add a robots.txt at the root of every Pages repo. Maintain a vault reference card listing every public repo + its purpose + its audit history. Audit periodically — gaps appear when older files predate the standard.</div></div>
-  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
-  <div class="field"><div class="field-label">Depends on</div><div class="field-value">A static publishing surface (GitHub Pages, Netlify, Cloudflare Pages, etc.).</div></div>
-</div>
-
-<div class="component" id="plugin-patches-registry">
-  <div class="component-header">
-    <span class="component-name">Local Plugin Patches Registry</span>
-    <span class="component-tag pattern">Pattern</span>
-  </div>
-  <div class="field"><div class="field-label">What it is</div><div class="field-value">A vault reference card that logs every hand-edit made to files inside <code>~/.claude/plugins/cache/</code> or equivalent plugin-managed directories. The fix and the registry entry are co-equal — the registry is the recovery layer that survives plugin updates wiping the cache.</div></div>
-  <div class="field"><div class="field-label">What it does for us</div><div class="field-value">Plugin updates routinely overwrite the cache. Without the registry, every fix has to be rediscovered. With the registry, a one-line note ("plugin X version Y, file Z, change W, why") makes the fix re-applicable in seconds when the next update wipes it.</div></div>
-  <div class="field"><div class="field-label">Adopt</div><div class="field-value">Create a single vault reference file. Every time you hand-edit a plugin cache file, log: plugin name + version, file path, change made, reason, date. Treat the registry entry as part of the fix — incomplete without it.</div></div>
-  <div class="field"><div class="field-label">Difficulty</div><div class="field-value">Low</div></div>
-  <div class="field"><div class="field-label">Depends on</div><div class="field-value">A vault that survives plugin updates (i.e., outside the plugin's cache directory).</div></div>
-</div>
-</section>
-
-<!-- 09 FIRST FIVE -->
-<section id="first-five">
-<h2><span class="num">09</span>First five to try</h2>
-
-<p class="section-intro">If you adopt nothing else, adopt these five. They are the minimum viable setup — enough to feel the leverage without overcommitting to infrastructure you don't need yet.</p>
-
-<div class="first-five">
-<ol>
-  <li><strong>Obsidian</strong> — your vault. Everything else sits on top of this.</li>
-  <li><strong>Claude Code CLI</strong> — your execution environment.</li>
-  <li><strong>Vault Card Discipline</strong> — the 6-part standard applied to one template. Start with Person or Concept. The search payoff shows up within a week.</li>
-  <li><strong>Session Boot Protocol</strong> — a CLAUDE.md that reads three files before the first turn. Cold starts disappear.</li>
-  <li><strong>Mirror Agent Protocol</strong> — begin with an empty failure pattern list. Add a new entry every time you catch yourself correcting the same thing twice. Within a month you'll have a personalized failure catalog that the AI actively watches for.</li>
-</ol>
-</div>
-
-<div class="callout success">
-<div class="callout-label">Why these five</div>
-<p>These are the ones where the leverage shows up fastest. Every other component in the catalog compounds from this foundation. The MCP servers, the skill packs, the scheduled tasks, the two-agent architecture — all of them work better when these five are already in place.</p>
-<p><strong>Add one new component per week at most.</strong> Any faster and you won't feel the effect of what you just added.</p>
-</div>
-</section>
-
-<footer>
-  <div class="meta-row">
-    <span>SNAPSHOT · 2026-04-24</span>
-    <span>·</span>
-    <span>REFERENCE ONLY</span>
-    <span>·</span>
-    <span>NOT MAINTAINED</span>
-  </div>
-  <p>This is not a maintained project. Tools evolve, commands change, patterns deepen.<br>
-  If you're reading this much later than the snapshot date, verify before installing anything.</p>
-</footer>
-
-</main>
-</body>
-</html>
+  <div class
